@@ -45,18 +45,14 @@ export class ImageService {
 	}
 
 	async deleteImage(imageId: string): Promise<void> {
+		// imageId já inclui a extensão (ex.: "<uuid>.png"), como retornado por uploadImage
 		const imagePath = join(this.imagesDir, imageId);
-		const extensions = [".jpg", ".jpeg", ".png"];
-		
-		for (const ext of extensions) {
-			const fullPath = `${imagePath}${ext}`;
-			if (existsSync(fullPath)) {
-				try {
-					await unlink(fullPath);
-				} catch (error) {
-					console.error("Error deleting image file:", error);
-				}
-				break;
+
+		if (existsSync(imagePath)) {
+			try {
+				await unlink(imagePath);
+			} catch (error) {
+				console.error("Error deleting image file:", error);
 			}
 		}
 	}
